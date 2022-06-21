@@ -56,14 +56,3 @@ set_perm_recursive $MODPATH/system/vendor/lib/arm 0 0 0755 0755
 set_perm_recursive $MODPATH/system/vendor/lib/arm/nb 0 0 0755 0755
 set_perm_recursive $MODPATH/system/vendor/lib64/arm64 0 0 0755 0755
 set_perm_recursive $MODPATH/system/vendor/lib64/arm64/nb 0 0 0755 0755
-
-
-
-
-
-
-
-
-
-
-
