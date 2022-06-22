@@ -4,8 +4,8 @@ SKIPUNZIP=0
 # Check architecture and api level
 api_level_arch_detect
 if [ "$ARCH" == "x64" ] && [ "$API" -ge "31" ]; then
-    ui_print "- Device platform: $ARCH"
-    ui_print "- API Level: $API"
+   ui_print "- Device platform: $ARCH"
+   ui_print "- API Level: $API"
 elif [ "$ARCH" != "x64" ] && [ "$API" -lt "31" ]; then
      ui_print "! Unsupport platform: $ARCH"
      abort "! Unsupport API: $API"
