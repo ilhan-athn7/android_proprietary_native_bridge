@@ -19,7 +19,16 @@
 
 
 <details>
-  <summary>For Windows Subsystem for Android (Outdated - Postponed)</summary>
+  <summary>For AVD (Android Studio) (Not planned)</summary>
+
+- Similar Projects:
+ - [sickcodes/Droid-NDK-Extractor](https://github.com/sickcodes/Droid-NDK-Extractor)
+ - [RawPikachu/libndk_translation_Module](https://github.com/RawPikachu/libndk_translation_Module)
+</details>
+
+
+<details>
+  <summary>For Windows Subsystem for Android (Outdated - Postponed - Incomplete)</summary>
 
 - Go to [store.rg-adguard](https://store.rg-adguard.net/) website.
 - Chose ProductID, paste `9P3395VX91NR` to the textbox and hit the button.
@@ -30,11 +39,6 @@
 
 <details>
   <summary>For Google Play Games for PC (Not planned)</summary>
-</details>
-
-
-<details>
-  <summary>For AVD (Android Studio) (Not planned)</summary>
 </details>
 
 ## Notes
