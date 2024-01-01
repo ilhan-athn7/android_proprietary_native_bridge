@@ -9,7 +9,7 @@
  
 ## Building module locally 
 <details>
-  <summary>For ChromeOS (Work In Progress)</summary>
+  <summary>For ChromeOS</summary>
 
 - Retrieve recoveries from [chromiumdash](https://chromiumdash.appspot.com/serving-builds) or [cros.tech](https://cros.tech/) website.
 - `zork` or `guybrush` is recommended for AMD processors.
