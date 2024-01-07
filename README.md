@@ -12,7 +12,7 @@
   <summary>For ChromeOS</summary>
 
 - Retrieve recoveries from [chromiumdash](https://chromiumdash.appspot.com/serving-builds) or [cros.tech](https://cros.tech/) website.
-- `zork` or `guybrush` is recommended for AMD processors.
+- `zork`, `guybrush` or `skyrim` is recommended for AMD processors.
 - `brya` is recommended for recent generation Intel processors.
 - Use [cros_nb_extract.sh](https://github.com/ilhan-athn7/android_proprietary_native_bridge/blob/main/Scripts/cros_nb_extract.sh) script to build the module.
 </details>
