@@ -106,6 +106,8 @@ if ! [ -a "$MODPATH"/system/lib64/libhoudini.so ] || ! [ -a "$MODPATH"/system/ve
 else
 	setprop ro.dalvik.vm.native.bridge libhoudini.so
 fi
+rmmod binfmt_misc
+modprobe binfmt_misc
 mount binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
 cat /system/etc/binfmt_misc/arm_exe >/proc/sys/fs/binfmt_misc/register
 cat /system/etc/binfmt_misc/arm_dyn >/proc/sys/fs/binfmt_misc/register
@@ -116,6 +118,8 @@ EOF
 	cat <<EOF >"customize.sh"
 #WIP
 EOF
+
+	cp /mnt/cros_A/opt/google/vms/android/ARM_TO_AMD_DBT_LICENSE.txt ./
 
 	echo -e "-Pull blobs from chromeos recovery ..."
 	echo "$password" | sudo -S sh -c "$(cat << 'EOF'
@@ -131,7 +135,9 @@ EOF
 	cp -r --preserve=all /mnt/cros_system/system/lib64/libhoudini.so					$p2/lib64/
 	cp -r --preserve=all /mnt/cros_system/system/lib64/libndk_translation*					$p2/lib64/
 	cp -r --preserve=all /mnt/cros_system/system/lib64/arm64/*						$p2/lib64/arm64/
-	cp -r --preserve=all /mnt/cros_system/system/etc/binfmt_misc/*						$p2/etc/binfmt_misc/
+        cp -r --preserve=all /mnt/cros_system/system/etc/binfmt_misc/*						$p2/etc/binfmt_misc/
+	cp -r --preserve=all /mnt/cros_system/system/etc/cpuinfo*						$p2/etc/
+        cp -r --preserve=all /mnt/cros_system/system/etc/ld.config*						$p2/etc/
 
 	cp -r --preserve=all /mnt/cros_vendor/bin/houdini*							$p1/bin/
 	cp -r --preserve=all /mnt/cros_vendor/bin/ndk_translation_program_runner_binfmt_misc*			$p1/bin/
@@ -144,6 +150,9 @@ EOF
 	cp -r --preserve=all /mnt/cros_vendor/lib64/libndk_translation*						$p1/lib64/
 	cp -r --preserve=all /mnt/cros_vendor/lib64/arm64/*							$p1/lib64/arm64/
 	cp -r --preserve=all /mnt/cros_vendor/etc/binfmt_misc/*							$p1/etc/binfmt_misc/
+	cp -r --preserve=all /mnt/cros_vendor/etc/cpuinfo*							$p1/etc/
+        cp -r --preserve=all /mnt/cros_vendor/etc/ld.config*							$p1/etc/
+
 EOF
 )" 2>/dev/null
 

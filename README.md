@@ -34,6 +34,8 @@
 - Chose ProductID, paste `9P3395VX91NR` to the textbox and hit the button.
 - Download `.msixbundle` from the bottom of results table.
 - Use [wsa_nb_extract.sh](https://github.com/ilhan-athn7/android_proprietary_native_bridge/blob/main/Scripts/wsa_nb_extract.sh) script to build the module.
+- Similar Projects:
+ - [natsumerinchan/libhoudini-package](https://github.com/natsumerinchan/libhoudini-package)
 </details>
 
 
