@@ -50,11 +50,9 @@ build_magisk_module(){
 
 	p1="system/"
 	p2="system/vendor"
-	vdirs="	$p1		$p1/bin			$p2		$p2/bin
-		$p1/bin/arm	$p1/bin/arm64		$p2/bin/arm	$p2/bin/arm64
-		$p1/lib		$p1/lib/arm		$p2/lib		$p2/lib/arm
-		$p1/lib64	$p1/lib64/arm64		$p2/lib64	$p2/lib64/arm64
-		$p1/etc		$p1/etc/binfmt_misc	$p2/etc		$p2/etc/binfmt_misc"
+	vdirs="	$p1/bin/arm	$p1/bin/arm64		$p2/bin/arm	$p2/bin/arm64
+		$p1/lib/arm	$p1/lib64/arm64		$p2/lib/arm	$p2/lib64/arm64
+		$p1/etc/init	$p1/etc/binfmt_misc	$p2/etc/init	$p2/etc/binfmt_misc"
 	for dirs in $vdirs
 		do mkdir -p "$dirs"
 	done
@@ -101,22 +99,46 @@ EOF
 	cat <<EOF >"service.sh"
 until [[ "\$(getprop sys.boot_completed)" == "1" ]]; do sleep 1; done
 
-if ! [ -a "$MODPATH"/system/lib64/libhoudini.so ] || ! [ -a "$MODPATH"/system/vendor/lib64/libhoudini.so ] || ! [ -a "$MODPATH"/vendor/lib64/libhoudini.so ];
-	setprop ro.dalvik.vm.native.bridge libndk_translation.so
+if [ -a "\$MODPATH"/system/lib64/libhoudini.so ] || [ -a "\$MODPATH"/system/vendor/lib64/libhoudini.so ] || [ -a "\$MODPATH"/vendor/lib64/libhoudini.so ];
+then
+	resetprop ro.dalvik.vm.native.bridge libhoudini.so
 else
-	setprop ro.dalvik.vm.native.bridge libhoudini.so
+	resetprop ro.dalvik.vm.native.bridge libndk_translation.so
 fi
-rmmod binfmt_misc
-modprobe binfmt_misc
-mount binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
-cat /system/etc/binfmt_misc/arm_exe >/proc/sys/fs/binfmt_misc/register
-cat /system/etc/binfmt_misc/arm_dyn >/proc/sys/fs/binfmt_misc/register
-cat /system/etc/binfmt_misc/arm64_exe >/proc/sys/fs/binfmt_misc/register
-cat /system/etc/binfmt_misc/arm64_dyn >/proc/sys/fs/binfmt_misc/register
 EOF
 
 	cat <<EOF >"customize.sh"
 #WIP
+EOF
+
+	cat <<EOF >system/etc/init/nb.rc
+# Enable native bridge for target executables
+on early-init && property:ro.enable.native.bridge.exec=1
+    modprobe binfmt_misc
+    mount binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
+
+on property:ro.enable.native.bridge.exec=1 && property:ro.dalvik.vm.isa.arm=x86
+    copy /system/etc/binfmt_misc/arm_exe /proc/sys/fs/binfmt_misc/register
+    copy /system/etc/binfmt_misc/arm_dyn /proc/sys/fs/binfmt_misc/register
+
+on property:ro.enable.native.bridge.exec=1 && property:ro.dalvik.vm.isa.arm64=x86_64
+    copy /system/etc/binfmt_misc/arm64_exe /proc/sys/fs/binfmt_misc/register
+    copy /system/etc/binfmt_misc/arm64_dyn /proc/sys/fs/binfmt_misc/register
+EOF
+
+        cat <<EOF >system/vendor/etc/init/nb.rc
+# Enable native bridge for target executables
+on early-init && property:ro.enable.native.bridge.exec=1
+    modprobe binmft_misc
+    mount binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
+
+on property:ro.enable.native.bridge.exec=1 && property:ro.dalvik.vm.isa.arm=x86
+    copy /vendor/etc/binfmt_misc/arm_exe /proc/sys/fs/binfmt_misc/register
+    copy /vendor/etc/binfmt_misc/arm_dyn /proc/sys/fs/binfmt_misc/register
+
+on property:ro.enable.native.bridge.exec=1 && property:ro.dalvik.vm.isa.arm64=x86_64
+    copy /vendor/etc/binfmt_misc/arm64_exe /proc/sys/fs/binfmt_misc/register
+    copy /vendor/etc/binfmt_misc/arm64_dyn /proc/sys/fs/binfmt_misc/register
 EOF
 
 	cp /mnt/cros_A/opt/google/vms/android/ARM_TO_AMD_DBT_LICENSE.txt ./
@@ -152,7 +174,6 @@ EOF
 	cp -r --preserve=all /mnt/cros_vendor/etc/binfmt_misc/*							$p1/etc/binfmt_misc/
 	cp -r --preserve=all /mnt/cros_vendor/etc/cpuinfo*							$p1/etc/
         cp -r --preserve=all /mnt/cros_vendor/etc/ld.config*							$p1/etc/
-
 EOF
 )" 2>/dev/null
 
