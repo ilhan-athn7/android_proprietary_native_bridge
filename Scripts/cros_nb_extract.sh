@@ -108,14 +108,24 @@ fi
 EOF
 
 	cat <<EOF >"customize.sh"
-#WIP
+set_perm_recursive \$MODPATH 0 0 0755 0644
+set_perm_recursive \$MODPATH/system/bin/* 0 2000 0755
+set_perm_recursive \$MODPATH/system/etc/binfmt_misc 0 0 0755 0755
+set_perm_recursive \$MODPATH/system/lib* 0 0 0755 0644
+set_perm_recursive \$MODPATH/system/etc 0 0 0755 0644
+
+set_perm_recursive \$MODPATH 0 0 0755 0644
+set_perm_recursive \$MODPATH/vendor/bin/* 0 2000 0755
+set_perm_recursive \$MODPATH/vendor/etc/binfmt_misc 0 0 0755 0755
+set_perm_recursive \$MODPATH/vendor/lib* 0 0 0755 0644
+set_perm_recursive \$MODPATH/vendor/etc 0 0 0755 0644
 EOF
 
 	cat <<EOF >system/etc/init/nb.rc
 # Enable native bridge for target executables
 on early-init && property:ro.enable.native.bridge.exec=1
-    modprobe binfmt_misc
-    mount binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
+    exec u:r:su:s0 -- /system/bin/logwrapper /system/bin/sh /system/bin/modprobe binfmt_misc
+    mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
 
 on property:ro.enable.native.bridge.exec=1 && property:ro.dalvik.vm.isa.arm=x86
     copy /system/etc/binfmt_misc/arm_exe /proc/sys/fs/binfmt_misc/register
@@ -129,8 +139,8 @@ EOF
         cat <<EOF >system/vendor/etc/init/nb.rc
 # Enable native bridge for target executables
 on early-init && property:ro.enable.native.bridge.exec=1
-    modprobe binmft_misc
-    mount binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
+    exec u:r:su:s0 -- /system/bin/logwrapper /system/bin/sh /system/bin/modprobe binmft_misc
+    mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
 
 on property:ro.enable.native.bridge.exec=1 && property:ro.dalvik.vm.isa.arm=x86
     copy /vendor/etc/binfmt_misc/arm_exe /proc/sys/fs/binfmt_misc/register
