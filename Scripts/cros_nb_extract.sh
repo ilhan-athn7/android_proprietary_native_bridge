@@ -31,13 +31,13 @@ prepare_workdir(){
 	mkdir -p "$work_dir" && cd "$_"
 
 	7z x ../"$cros_recovery" -y -oimages &> /dev/null
-	7z e images/"$cros_recovery_bin" -y -oimages 2.ROOT-A.img &> /dev/null
+	7z e images/"$cros_recovery_bin" -y -oimages *ROOT-A.img &> /dev/null
 	rm images/"$cros_recovery_bin"
 
 	echo -e "-Mounting android system/vendor (Root) ..."
 	echo "$password" | sudo -S sh -c ' \
 		mkdir -p /mnt/cros_A /mnt/cros_system /mnt/cros_vendor && \
-		mount -o loop,ro images/2.ROOT-A.img /mnt/cros_A && \
+		mount -o loop,ro images/*ROOT-A.img /mnt/cros_A && \
 		mount -o loop,ro /mnt/cros_A/opt/google/vms/android/system.raw.img /mnt/cros_system && \
 		mount -o loop,ro /mnt/cros_A/opt/google/vms/android/vendor.raw.img /mnt/cros_vendor '
 }
